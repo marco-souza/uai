@@ -1,9 +1,11 @@
 {
 	"imports": {
 		"@cmd/": "./cmd/",
+		"@services/": "./services/",
 		"load-env": "https://deno.land/x/dotenv@v3.2.0/load.ts",
 		"cliffy": "https://x.nest.land/cliffy@0.20.1/mod.ts",
 		"zx": "https://deno.land/x/zx_deno@1.2.2/mod.mjs",
+		"puppeteer": "https://deno.land/x/puppeteer@14.1.1/mod.ts",
 		"colors": "https://deno.land/std@0.115.1/fmt/colors.ts"
 	}
 }
