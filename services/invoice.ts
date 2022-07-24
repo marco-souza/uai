@@ -112,15 +112,15 @@ async function mapInvoiceToSelectors(invoice: Invoice, page: Page) {
     // TODO: improve index selector
     const selectorValues = [
       [
-				`${INVOICE_SELECTOR_MAP.items} .quantity input[type='number']:nth-child(${index + 1})`,
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .quantity input`,
 				item.quantity.toString(),
       ],
       [
-				`${INVOICE_SELECTOR_MAP.items} .unit_cost input[type='number']:nth-child(${index + 1})`,
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .unit_cost input`,
 				item.rate.toString(),
       ],
       [
-				`${INVOICE_SELECTOR_MAP.items} .name textarea:nth-child(${index + 1})`,
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .name textarea`,
 				item.description,
       ],
     ]

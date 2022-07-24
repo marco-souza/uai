@@ -43,5 +43,5 @@ export const INVOICE_SELECTOR_MAP: Record<keyof Invoice, string> = {
 	to: '.contact.to textarea',
 	from: '.contact.from textarea',
 	note: '.notes-holder textarea',
-	items: '.items-holder',
+	items: '.items-holder .items-table>.item-row',
 };
