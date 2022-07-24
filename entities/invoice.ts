@@ -38,10 +38,15 @@ export function makeInvoiceItem(item: Partial<InvoiceItem>): InvoiceItem {
 
 export const INVOICE_URL = 'https://invoice-generator.com/#/invoices';
 
-export const INVOICE_SELECTOR_MAP: Record<keyof Invoice, string> = {
+interface InvoiceSelectorMap extends Record<keyof Invoice, string> {
+	addItem: string;
+}
+
+export const INVOICE_SELECTOR_MAP: InvoiceSelectorMap = {
 	id: '.subtitle input',
 	to: '.contact.to textarea',
 	from: '.contact.from textarea',
 	note: '.notes-holder textarea',
 	items: '.items-holder .items-table>.item-row',
+	addItem: '.new-line button',
 };

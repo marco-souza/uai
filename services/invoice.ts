@@ -38,18 +38,24 @@ async function makeInvoiceService(browser: Browser, page: Page) {
 async function setupInvoice(page: Page) {
 	const invoice = await promptInvoiceInfo();
 
-  console.log(invoice)
+	console.log(invoice);
 
 	await page.goto(INVOICE_URL);
 	await page.waitForSelector(INVOICE_SELECTOR_MAP.id);
 	await page.click('.got-it');
 
-	// TODO: add invoice line items
+	// add invoice line items
+	console.log('adding invoice items');
+	await page.waitForSelector(INVOICE_SELECTOR_MAP.addItem);
+	for (const _ in invoice.items.slice(1)) {
+		await page.click(INVOICE_SELECTOR_MAP.addItem);
+	}
 
 	// add invoice items configs to page
-	mapInvoiceToSelectors(invoice, page);
+	console.log('preparing invoice');
+	await mapInvoiceToSelectors(invoice, page);
 
-  console.log("printing invoice")
+	console.log('printing invoice');
 	await page.screenshot({ path: 'example.png' });
 	// TODO: save invoice config to config file
 }
@@ -76,8 +82,8 @@ async function promptInvoiceInfo() {
 		default: '',
 	});
 
-  console.log("\nPlease type the items of the invoice");
-  const items = await promptInvoiceItems();
+	console.log('\nPlease type the items of the invoice');
+	const items = await promptInvoiceItems();
 
 	return makeInvoice({ id, to, from, note, items });
 }
@@ -108,32 +114,33 @@ async function mapInvoiceToSelectors(invoice: Invoice, page: Page) {
 		),
 	]);
 
-	await Promise.all(invoice.items.map(async (item, index) => {
-    // TODO: improve index selector
-    const selectorValues = [
-      [
-				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .quantity input`,
+	// must be sequential to trigger change event
+	for (const i in invoice.items) {
+		const item = invoice.items[i]!;
+		const selectorIndex = Number(i) + 1;
+		const selectorValues = [
+			[
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${selectorIndex}) .quantity input`,
 				item.quantity.toString(),
-      ],
-      [
-				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .unit_cost input`,
+			],
+			[
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${selectorIndex}) .unit_cost input`,
 				item.rate.toString(),
-      ],
-      [
-				`${INVOICE_SELECTOR_MAP.items}:nth-child(${index + 1}) .name textarea`,
+			],
+			[
+				`${INVOICE_SELECTOR_MAP.items}:nth-child(${selectorIndex}) .name textarea`,
 				item.description,
-      ],
-    ]
+			],
+		];
 
-    const promiseList = []
-    for (const [selector, value] of selectorValues) {
-      promiseList.push(
-        page.$eval(selector, (el, value) => (el.value = value), value)
-      )
-    }
+		for (const [selector, value] of selectorValues) {
+			const input = await page.$(selector);
+			if (input == null) continue;
 
-    return await Promise.all(promiseList)
-  }));
+			await input.evaluate((el) => el.value = '');
+			await input.type(value, { delay: 10 });
+		}
+	}
 }
 
 async function promptInvoiceItems(
@@ -142,11 +149,11 @@ async function promptInvoiceItems(
 	const item = await addInvoiceItem();
 
 	const addAnother = await Input.prompt({
-		message: 'Add another item?',
-		default: 'y',
+		message: 'Add another item? (y/n)',
+		default: 'n',
 	});
 
-  const newList = [...items, item]
+	const newList = [...items, item];
 	if (addAnother.toLowerCase() === 'y') {
 		return promptInvoiceItems(newList);
 	}
@@ -155,11 +162,12 @@ async function promptInvoiceItems(
 }
 
 async function addInvoiceItem() {
-  const now = new Date()
+	const now = new Date();
 	const description: InvoiceItem['description'] = await Input.prompt({
 		message: 'Description',
 		minLength: MIN_LEN,
-    default: `Services provided during ${now.getMonth()}/${now.getFullYear()}`,
+		default:
+			`Services provided during ${now.getMonth()}/${now.getFullYear()}`,
 	});
 
 	const quantity = await Input.prompt({
@@ -168,7 +176,7 @@ async function addInvoiceItem() {
 	});
 
 	const rate = await Input.prompt({
-		message: 'Rate',
+		message: 'Rate ($)',
 		default: '0',
 	});
 
