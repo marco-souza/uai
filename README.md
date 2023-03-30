@@ -10,7 +10,7 @@ This package is a simple CLI tool to comunicate with OpenAI API, to be used as a
 ### Install
 
 1. Install it with `make install`
-2. Done! Call `oai how are you doing\?`
+2. Done! Call `uai how are you doing\?`
 
 ### Development
 

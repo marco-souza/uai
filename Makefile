@@ -12,5 +12,8 @@ install: src/main.rs
 test: src/main.rs
 	cargo test
 
+publish: src/main.rs Cargo.toml
+	cargo publish
+
 fmt: src/main.rs
 	rustfmt src/* --edition 2021

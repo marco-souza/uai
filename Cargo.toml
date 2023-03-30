@@ -1,9 +1,10 @@
 [package]
-name = "oai"
+name = "uai"
 version = "0.1.0"
+authors = ["Marco Antônio <marco@tremtec.com>"]
+description = "A plugabble command-line interface for OpenAI API"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
 
 [dependencies]
 const_env = "0.1.2"
