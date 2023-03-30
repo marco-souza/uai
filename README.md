@@ -21,3 +21,4 @@ This package is a simple CLI tool to comunicate with OpenAI API, to be used as a
 - [ ] if no args was passed, open a conversational chat
 - [x] keep context logs to make conversations more fluid
 - [ ] make it pluggable (allowing to pass files with the role description)
+- [ ] add tests
