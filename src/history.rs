@@ -10,7 +10,7 @@ const INITIAL_PROMPT: &str = concat!(
     "AI: 3 + 2 = 5\n",
 );
 const HISTORY_FILE: &str = ".openai-history";
-const CONTEXT_SIZE: usize = 100;
+const CONTEXT_SIZE: usize = 300;
 
 pub struct History {
     file: String,
@@ -35,7 +35,7 @@ impl History {
             // limit context size
             size if size > self.context_size * 2 => {
                 let offset = history.len() - self.context_size;
-                let init = history[..offset].to_string();
+                let init = INITIAL_PROMPT.to_string();
                 let end = history[offset..].to_string();
                 init + &end
             }
